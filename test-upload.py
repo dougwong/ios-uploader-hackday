@@ -20,16 +20,19 @@ def uploadFileToLiferay(title, file):
 		'file' : open(file, 'rb')
 	}
 
-	response = requests.post(baseURL + command, 
-		auth=(userEmail, password), 
-		params=data, 
-		files=files)
-
 	try:
-		print(response.status_code)
-		print(response.text)
-	except:
-		print("Sorry, unable to upload file.") 
+		response = requests.post(baseURL + command, 
+			auth=(userEmail, password), 
+			params=data, 
+			files=files)
+
+		# print(response.status_code)
+		# print(response.text)
+		
+		response.raise_for_status()
+	except requests.exceptions.HTTPError as e:
+		print("Sorry, unable to upload file.")
+		print(e)
 
 
 if __name__ == '__main__':
@@ -40,11 +43,10 @@ if __name__ == '__main__':
     parser.add_argument("-t", "--title", dest="title", type=str, help="Set the file name.")
     parser.add_argument("-f", "--file", dest="file", type=str, help="Set the file to upload.")
 
-    parser.add_argument("command", nargs=1, choices=['upload', 'check'],  help="Specify a command. upload, check.")
+    parser.add_argument("command", nargs=1, choices=['upload', 'check'],  help="Specify a command. e.g. upload, check.")
 
     args = parser.parse_args()
 
-    print('Hello')
-
     if args.command[0] == 'upload':
-        uploadFileToLiferay(args.title, args.file)
+    	print("Uploading " + args.file + " as " + args.title + " to liferay.")
+    	uploadFileToLiferay(args.title, args.file)
