@@ -25,8 +25,11 @@ def uploadFileToLiferay(title, file):
 		params=data, 
 		files=files)
 
-	print(response.status_code)
-	print(response.text)
+	try:
+		print(response.status_code)
+		print(response.text)
+	except:
+		print("Sorry, unable to upload file.") 
 
 
 if __name__ == '__main__':
